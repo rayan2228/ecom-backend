@@ -30,7 +30,6 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: [true, "password is required"],
-        select: false
     },
     avatar: {
         publicId: String,
@@ -56,6 +55,14 @@ userSchema.pre("save", async function (next) {
     }
 })
 
+userSchema.methods.isPasswordCorrect = async function (password) {
+    try {
+        return await bcrypt.compare(password, this.password);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 userSchema.methods.mailVerificationToken = function () {
     try {
         return jwt.sign({
@@ -67,6 +74,7 @@ userSchema.methods.mailVerificationToken = function () {
         console.log(error);
     }
 }
+
 userSchema.methods.accessTokenGenerate = function () {
     try {
         return jwt.sign({
@@ -79,6 +87,7 @@ userSchema.methods.accessTokenGenerate = function () {
         console.log(error);
     }
 }
+
 userSchema.methods.refreshTokenGenerate = function () {
     try {
         return jwt.sign({

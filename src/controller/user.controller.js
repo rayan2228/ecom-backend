@@ -3,9 +3,23 @@ import { verificationMail } from "../mail/verificationMail.js"
 import { User } from "../model/user.schema.js"
 import { sendMail } from "../service/mailService.js"
 import { ApiError } from "../utils/ApiErrors.js"
+import { ApiSuccess } from "../utils/ApiSuccess.js"
 import { TryCatch } from "../utils/TryCatch.js"
 import { passwordValidator } from "../utils/validator.js"
 import jwt from "jsonwebtoken"
+
+
+const generateTokens = TryCatch(async (_id) => {
+    const user = await User.findById(_id)
+    const accessToken = await user.accessTokenGenerate()
+    const refreshToken = await user.refreshTokenGenerate()
+    user.refreshToken = refreshToken
+    await user.save()
+    return { accessToken, refreshToken }
+})
+
+
+
 const createUser = TryCatch(async (req, res) => {
     const { displayname, username, email, password } = req.body
     if (Object.values(req.body).some((item) => item?.trim() === "")) {
@@ -28,10 +42,10 @@ const createUser = TryCatch(async (req, res) => {
         email,
         password
     })
-    const user = await User.findById(createdUser._id)
+    const user = await User.findById(createdUser._id).select("-password")
     const mailVerificationToken = user.mailVerificationToken()
     await sendMail(user.email, "Email Verification", "", verificationMail(user.displayname, mailVerificationToken))
-    return res.json({ user })
+    return res.status(201).json(new ApiSuccess(201, "user created successfully", { user }))
 })
 
 const mailVerification = async (req, res) => {
@@ -68,6 +82,37 @@ const mailVerification = async (req, res) => {
     }
 };
 
+const login = TryCatch(async (req, res) => {
+    const { email, password } = req.body;
 
+    // Validate input fields
+    if (!email || !password || Object.values(req.body).some((item) => item.trim() === "")) {
+        throw new ApiError(400, "All fields are required");
+    }
 
-export { createUser, mailVerification }
+    // Find the user by email
+    const isUser = await User.findOne({ email });
+    if (!isUser) {
+        throw new ApiError(404, "User not found");
+    }
+
+    // Check if the password is correct
+    const isPasswordCorrect = await isUser.isPasswordCorrect(password);
+    const user = await User.findById(isUser._id).select("-password")
+    if (!isPasswordCorrect) {
+        throw new ApiError(401, "Invalid email or password");
+    }
+
+    const { accessToken, refreshToken } = await generateTokens(user._id)
+
+    const options = {
+        secure: process.env.NODE_ENV === "production", 
+        httpOnly: true,
+        sameSite: "strict",
+    }
+    res.cookie("accessToken", accessToken, options).cookie("refreshToken", refreshToken, options)
+    // Successful login
+    return res.json(new ApiSuccess(200, "Login successful", { user, accessToken, refreshToken }));
+});
+
+export { createUser, mailVerification, login }
