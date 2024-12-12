@@ -9,14 +9,18 @@ import { passwordValidator } from "../utils/validator.js"
 import jwt from "jsonwebtoken"
 
 
-const generateTokens = TryCatch(async (_id) => {
-    const user = await User.findById(_id)
-    const accessToken = await user.accessTokenGenerate()
-    const refreshToken = await user.refreshTokenGenerate()
-    user.refreshToken = refreshToken
-    await user.save()
-    return { accessToken, refreshToken }
-})
+const generateTokens = async (_id) => {
+    try {
+        const user = await User.findById(_id)
+        const accessToken = await user.accessTokenGenerate()
+        const refreshToken = await user.refreshTokenGenerate()
+        user.refreshToken = refreshToken
+        await user.save()
+        return { accessToken, refreshToken }
+    } catch (error) {
+        console.log(error, message);
+    }
+}
 
 
 
@@ -106,7 +110,7 @@ const login = TryCatch(async (req, res) => {
     const { accessToken, refreshToken } = await generateTokens(user._id)
 
     const options = {
-        secure: process.env.NODE_ENV === "production", 
+        secure: process.env.NODE_ENV === "production",
         httpOnly: true,
         sameSite: "strict",
     }
@@ -114,5 +118,6 @@ const login = TryCatch(async (req, res) => {
     // Successful login
     return res.json(new ApiSuccess(200, "Login successful", { user, accessToken, refreshToken }));
 });
+
 
 export { createUser, mailVerification, login }

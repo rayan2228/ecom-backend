@@ -1,14 +1,17 @@
 import express from "express";
 import cors from "cors"
 import cookieParser from "cookie-parser";
+import { origin } from "./constant.js";
 const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded())
+app.use(express.static("public"))
 app.use(cors({
-    origin: ["http://localhost:5173"]
+    origin
 }))
 app.use(cookieParser())
+
 
 import userRouter from "./route/user.route.js"
 import { errorHandler } from "./middleware/errorHandler.middleware.js";
