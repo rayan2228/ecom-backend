@@ -120,4 +120,11 @@ const login = TryCatch(async (req, res) => {
 });
 
 
-export { createUser, mailVerification, login }
+const updateProfile = TryCatch(async (req, res) => {
+    console.log(req.file);
+
+})
+
+
+
+export { createUser, mailVerification, login, updateProfile }
