@@ -124,11 +124,33 @@ const login = TryCatch(async (req, res) => {
 const updateProfile = TryCatch(async (req, res) => {
     if (req.file) {
         const avatar = req.file
-        const clodinaryResult = await cloudinaryUpload(avatar.path, "a", "a")
-        
-        return res.json(new ApiSuccess(200, "avatar updated", { clodinaryResult }))
+        const clodinaryResult = await cloudinaryUpload(avatar.path, req.user.username, "avatar")
+        const user = await User.findByIdAndUpdate(req.user._id, {
+            $set: {
+                avatar: {
+                    public_id: clodinaryResult.public_id,
+                    url: clodinaryResult.optimizeUrl
+                }
+            }
+        },
+            {
+                new: true
+            }
+        )
+        return res.json(new ApiSuccess(200, "avatar updated", { user }))
     }
-
+    if (req.body.displayname) {
+        const user = await User.findByIdAndUpdate(req.user._id, {
+            $set: {
+                displayname: req.body.displayname
+            }
+        },
+            {
+                new: true
+            }
+        )
+        return res.json(new ApiSuccess(200, "displayname updated", { user }))
+    }
 })
 
 

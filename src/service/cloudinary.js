@@ -37,7 +37,7 @@ const cloudinaryUpload = async (imgPath, public_id, folder) => {
         return { uploadResult, optimizeUrl, autoCropUrl }
     } catch (error) {
         unlinkSync(imgPath)
-
+        throw error
     }
 };
 
