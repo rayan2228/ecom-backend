@@ -1,4 +1,4 @@
-import { JWT_SECRET } from "../constant.js"
+import { JWT_SECRET, REFRESHTOKEN_SECRET } from "../constant.js"
 import { verificationMail } from "../mail/verificationMail.js"
 import { User } from "../model/user.schema.js"
 import { cloudinaryUpload } from "../service/cloudinary.js"
@@ -184,4 +184,28 @@ const changePassword = TryCatch(async (req, res) => {
     return res.json(new ApiSuccess(200, "Password updated", {}))
 })
 
-export { createUser, mailVerification, login, updateProfile, logout, changePassword }
+const refreshAccessToken = TryCatch(async (req, res) => {
+    const refreshToken = req.cookies.refreshToken || req.headers.refreshToken
+    if (!refreshToken) {
+        throw new ApiError(401, "unauthorized access")
+    }
+    const decodedToken = jwt.verify(refreshToken, REFRESHTOKEN_SECRET)
+    if (!decodedToken) {
+        throw new ApiError(401, "unauthorized access")
+    }
+    const user = await User.findById(decodedToken._id)
+    if (!user) {
+        throw new ApiError(401, "unauthorized access")
+    }
+    const accessToken = await user.accessTokenGenerate()
+    const options = {
+        secure: process.env.NODE_ENV === "production",
+        httpOnly: true,
+        sameSite: "strict",
+    }
+    res.cookie("accessToken", accessToken, options)
+    res.json(new ApiSuccess(200, "Access token refreshed", { accessToken }))
+})
+
+
+export { createUser, mailVerification, login, updateProfile, logout, changePassword, refreshAccessToken }
