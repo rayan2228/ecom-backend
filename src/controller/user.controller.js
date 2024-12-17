@@ -154,5 +154,16 @@ const updateProfile = TryCatch(async (req, res) => {
 })
 
 
+const logout = TryCatch(async (req, res) => {
+    await User.findByIdAndUpdate(req.user._id, {
+        $set: {
+            refreshToken: null
+        }
+    })
+    res.clearCookie("accessToken")
+    res.clearCookie("refreshToken")
+    return res.json(new ApiSuccess(200, "Logout successful", {}))
+})
 
-export { createUser, mailVerification, login, updateProfile }
+
+export { createUser, mailVerification, login, updateProfile, logout }
