@@ -1,6 +1,7 @@
 import { JWT_SECRET } from "../constant.js"
 import { verificationMail } from "../mail/verificationMail.js"
 import { User } from "../model/user.schema.js"
+import { cloudinaryUpload } from "../service/cloudinary.js"
 import { sendMail } from "../service/mailService.js"
 import { ApiError } from "../utils/ApiErrors.js"
 import { ApiSuccess } from "../utils/ApiSuccess.js"
@@ -121,7 +122,12 @@ const login = TryCatch(async (req, res) => {
 
 
 const updateProfile = TryCatch(async (req, res) => {
-    console.log(req.file);
+    if (req.file) {
+        const avatar = req.file
+        const clodinaryResult = await cloudinaryUpload(avatar.path, "a", "a")
+        
+        return res.json(new ApiSuccess(200, "avatar updated", { clodinaryResult }))
+    }
 
 })
 
