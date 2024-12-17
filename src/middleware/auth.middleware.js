@@ -4,7 +4,9 @@ import { ApiError } from "../utils/ApiErrors.js";
 import { TryCatch } from "../utils/TryCatch.js";
 import jwt from "jsonwebtoken"
 export const auth = TryCatch(async (req, _, next) => {
-    const token = req.cookies.accessToken || req.headers.authorization.replace("Bearer ", "")
+    console.log(req.cookies);
+    
+    const token = req.cookies.accessToken || req.headers.authorization?.replace("Bearer ", "")
 
     if (!token) {
         throw new ApiError(401, "unauthorized access")

@@ -166,4 +166,22 @@ const logout = TryCatch(async (req, res) => {
 })
 
 
-export { createUser, mailVerification, login, updateProfile, logout }
+const changePassword = TryCatch(async (req, res) => {
+    const { password, oldPassword } = req.body
+    if (Object.values(req.body).some((item) => item?.trim() === "")) {
+        throw new ApiError(400, "all fields are required")
+    }
+    if (!passwordValidator(password)) {
+        throw new ApiError(400, "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character.")
+    }
+    const user = await User.findById(req.user._id)
+    const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
+    if (!isPasswordCorrect) {
+        throw new ApiError(401, "Invalid old password")
+    }
+    user.password = password
+    await user.save()
+    return res.json(new ApiSuccess(200, "Password updated", {}))
+})
+
+export { createUser, mailVerification, login, updateProfile, logout, changePassword }
