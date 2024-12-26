@@ -5,6 +5,7 @@ const productSchema = new Schema({
     slug: { type: String, unique: true, required: true },
     description: { type: String },
     category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
+    subcategory: { type: mongoose.Schema.Types.ObjectId, ref: "Subcategory", required: true },
     brand: { type: String },
     thumbnail: { publicId: String, url: String },
     images: [{
