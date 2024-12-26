@@ -10,6 +10,8 @@ const productInventorySchema = new Schema({
     inStock: { type: Boolean, default: false },
     sku: { type: String, unique: true, required: true },
     images: [String],
+}, {
+    timestamps: true
 });
 
 export const ProductInventory = models.ProductInventory || model("ProductInventory", productInventorySchema);
