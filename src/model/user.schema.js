@@ -37,9 +37,10 @@ const userSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ["user", "admin"],
+        enum: ["user", "admin", "vendor"],
         default: "user"
     },
+    vendor: { types: mongoose.Schema.Types.ObjectId, ref: "Vendor" },
     emailVerified: Date,
     refreshToken: String
 }, { timestamps: true })
