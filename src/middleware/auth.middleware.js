@@ -1,4 +1,5 @@
-import { verifyTokenAndGetUser } from "./middlewareUtils.js"; // Adjust the path as needed
+ // Adjust the path as needed
+import { verifyTokenAndGetUser } from "../utils/middlewareUtils.js";
 import { TryCatch } from "../utils/TryCatch.js";
 
 export const auth = TryCatch(async (req, _, next) => {

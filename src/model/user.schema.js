@@ -40,7 +40,7 @@ const userSchema = new Schema({
         enum: ["user", "admin", "vendor"],
         default: "user"
     },
-    vendor: { types: mongoose.Schema.Types.ObjectId, ref: "Vendor" },
+    // vendor: { types: mongoose.Schema.Types.ObjectId, ref: "Vendor" },
     emailVerified: Date,
     refreshToken: String
 }, { timestamps: true })

@@ -4,7 +4,7 @@ import { ApiError } from "../utils/ApiErrors.js";
 import { ApiSuccess } from "../utils/ApiSuccess.js";
 import { TryCatch } from "../utils/TryCatch.js";
 
-const createCategory = TryCatch(async () => {
+const createCategory = TryCatch(async (req,res) => {
     const createdData = {}
     let { name, slug, description, isActive } = req.body
     if (!name) {

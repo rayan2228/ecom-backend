@@ -13,10 +13,12 @@ app.use(cors({
 app.use(cookieParser())
 
 
-import userRouter from "./route/user.route.js"
 import { errorHandler } from "./middleware/errorHandler.middleware.js";
+import userRouter from "./route/user.route.js"
+import categoryRouter from "./route/category.route.js"
 
 app.use("/api/v1", userRouter)
+app.use("/api/v1", categoryRouter)
 
 app.use(errorHandler)
 
