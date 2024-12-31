@@ -16,9 +16,11 @@ app.use(cookieParser())
 import { errorHandler } from "./middleware/errorHandler.middleware.js";
 import userRouter from "./route/user.route.js"
 import categoryRouter from "./route/category.route.js"
+import subCategoryRouter from "./route/subcategory.route.js"
 
 app.use("/api/v1", userRouter)
 app.use("/api/v1", categoryRouter)
+app.use("/api/v1", subCategoryRouter)
 
 app.use(errorHandler)
 

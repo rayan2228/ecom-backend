@@ -1,10 +1,10 @@
-import { model, models, Schema } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 
 const subcategorySchema = new Schema({
     name: { type: String, required: true, unique: true },
     slug: { type: String, unique: true, required: true },
     description: { type: String },
-    category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
+    category: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true }],
     isActive: { type: Boolean, default: true },
     thumbnail: {
         publicId: String,
@@ -13,4 +13,4 @@ const subcategorySchema = new Schema({
 }, {
     timestamps: true
 });
-export const Subcategory = models.Subcategory || model("Subcategory", subcategorySchema);
+export const Subcategory = mongoose.models.Subcategory || model("Subcategory", subcategorySchema);
