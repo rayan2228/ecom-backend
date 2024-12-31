@@ -122,36 +122,40 @@ const login = TryCatch(async (req, res) => {
 
 
 const updateProfile = TryCatch(async (req, res) => {
+    const updates = {};
+
+    // Handle avatar update
     if (req.file) {
-        const avatar = req.file
-        const clodinaryResult = await cloudinaryUpload(avatar.path, req.user.username, "avatar")
-        const user = await User.findByIdAndUpdate(req.user._id, {
-            $set: {
-                avatar: {
-                    public_id: clodinaryResult.public_id,
-                    url: clodinaryResult.optimizeUrl
-                }
-            }
-        },
-            {
-                new: true
-            }
-        )
-        return res.json(new ApiSuccess(200, "avatar updated", { user }))
+        const avatar = req.file;
+        const cloudinaryResult = await cloudinaryUpload(
+            avatar.path,
+            req.user.username,
+            "avatar"
+        );
+        updates.avatar = {
+            public_id: cloudinaryResult.public_id,
+            url: cloudinaryResult.optimizeUrl,
+        };
     }
+
+    // Handle displayname update
     if (req.body.displayname) {
-        const user = await User.findByIdAndUpdate(req.user._id, {
-            $set: {
-                displayname: req.body.displayname
-            }
-        },
-            {
-                new: true
-            }
-        )
-        return res.json(new ApiSuccess(200, "displayname updated", { user }))
+        updates.displayname = req.body.displayname;
     }
-})
+
+    // Check if there are updates to make
+    if (Object.keys(updates).length === 0) {
+        return res
+            .status(400)
+            .json(new ApiError(400, "No valid fields to update"));
+    }
+
+    // Update user
+    const user = await User.findByIdAndUpdate(req.user._id, { $set: updates }, { new: true });
+
+    return res.json(new ApiSuccess(200, "Profile updated successfully", { user }));
+});
+
 
 
 const logout = TryCatch(async (req, res) => {

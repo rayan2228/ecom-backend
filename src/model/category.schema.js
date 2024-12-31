@@ -5,6 +5,10 @@ const categorySchema = new Schema({
     slug: { type: String, unique: true, required: true },
     description: { type: String },
     isActive: { type: Boolean, default: true },
+    thumbnail: {
+        publicId: String,
+        url: String
+    }
 }, {
     timestamps: true
 });

@@ -6,6 +6,10 @@ const subcategorySchema = new Schema({
     description: { type: String },
     category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
     isActive: { type: Boolean, default: true },
+    thumbnail: {
+        publicId: String,
+        url: String
+    }
 }, {
     timestamps: true
 });
