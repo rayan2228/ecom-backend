@@ -11,10 +11,10 @@ const getSubcategories = TryCatch(async (req, res) => {
 })
 
 const updateSubcategory = TryCatch(async (req, res) => {
-    let { name, slug, description, isActive } = req.body
-    const category = await Category.findOne({ name: req.params.name })
-    if (!category) {
-        throw new ApiError(404, "category not found")
+    let { name, slug, description, isActive, category } = req.body
+    const subcategory = await Subcategory.findOne({ name: req.params.name })
+    if (!subcategory) {
+        throw new ApiError(404, "subcategory not found")
     }
     if (!name) {
         throw new ApiError(400, "name is required")
@@ -23,22 +23,25 @@ const updateSubcategory = TryCatch(async (req, res) => {
         slug = name.replaceAll(" ", "-").toLowerCase()
     }
     if (req.file) {
-        if (category.thumbnail.public_id) {
-            await cloudinaryDelete(category.thumbnail.public_id)
+        if (subcategory.thumbnail.public_id) {
+            await cloudinaryDelete(subcategory.thumbnail.public_id)
         }
         const thumbnail = req.file
-        const cloudinaryResult = await cloudinaryUpload(thumbnail.path, name, "category")
-        category.thumbnail = {
+        const cloudinaryResult = await cloudinaryUpload(thumbnail.path, name, "subcategory")
+        subcategory.thumbnail = {
             public_id: cloudinaryResult.public_id,
             url: cloudinaryResult.optimizeUrl,
         }
     }
-    category.name = name
-    category.slug = slug
-    category.description = description
-    category.isActive = isActive
-    await category.save()
-    return res.json(new ApiSuccess(200, "category updated successfully", { category }))
+    subcategory.name = name
+    subcategory.slug = slug
+    subcategory.description = description
+    subcategory.isActive = isActive
+    if (category) {
+        subcategory.category.push(category)
+    }
+    await subcategory.save()
+    return res.json(new ApiSuccess(200, "subcategory updated successfully", { subcategory }))
 })
 
 const createSubcategory = TryCatch(async (req, res) => {
@@ -55,7 +58,7 @@ const createSubcategory = TryCatch(async (req, res) => {
     }
     if (req.file) {
         const thumbnail = req.file
-        const cloudinaryResult = await cloudinaryUpload(thumbnail.path, name, "category")
+        const cloudinaryResult = await cloudinaryUpload(thumbnail.path, name, "subcategory")
         createdData.thumbnail = {
             public_id: cloudinaryResult.public_id,
             url: cloudinaryResult.optimizeUrl,
