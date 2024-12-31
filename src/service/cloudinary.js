@@ -8,7 +8,6 @@ cloudinary.config({
     api_secret: CLOUD_API_SECRET
 });
 const cloudinaryUpload = async (imgPath, public_id, folder) => {
-
     try {
         // Upload an image
         const uploadResult = await cloudinary.uploader
@@ -41,4 +40,12 @@ const cloudinaryUpload = async (imgPath, public_id, folder) => {
     }
 };
 
-export { cloudinaryUpload }
+const cloudinaryDelete = async (public_id) => {
+    try {
+        await cloudinary.uploader.destroy(public_id)
+    } catch (error) {
+        throw error
+    }
+}
+
+export { cloudinaryUpload, cloudinaryDelete }
