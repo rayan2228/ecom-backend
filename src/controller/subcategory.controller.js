@@ -6,8 +6,8 @@ import { ApiSuccess } from "../utils/ApiSuccess.js";
 import { TryCatch } from "../utils/TryCatch.js";
 
 const getSubcategories = TryCatch(async (req, res) => {
-    const categories = await Category.find()
-    return res.json(new ApiSuccess(200, "categories fetched successfully", { categories }))
+    const subcategories = await Subcategory.find().populate("category")
+    return res.json(new ApiSuccess(200, "subcategories fetched successfully", { subcategories }))
 })
 
 const updateSubcategory = TryCatch(async (req, res) => {
