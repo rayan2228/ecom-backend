@@ -17,7 +17,7 @@ const subcategorySchema = new Schema({
 subcategorySchema.pre("save", async function (next) {
     try {
         if (this.isNew) {
-            this.category.push("677d3b973bf4c62d15be82b5");
+            this.category.push("677d442097b1ef071699ea91");
         }
         next();
     } catch (error) {

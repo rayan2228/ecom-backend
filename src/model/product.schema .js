@@ -1,4 +1,4 @@
-import { Schema, model, models } from "mongoose";
+import mongoose , { Schema, model } from "mongoose";
 
 const productSchema = new Schema({
     title: { type: String, required: true },
@@ -19,7 +19,7 @@ const productSchema = new Schema({
 productSchema.pre("save", async function (next) {
     try {
         if (this.isNew) {
-            this.category.push("677d3b973bf4c62d15be82b5");
+            this.category.push("677d442097b1ef071699ea91");
         }
         next();
     } catch (error) {
@@ -28,4 +28,4 @@ productSchema.pre("save", async function (next) {
     }
 })
 
-export const Product = models.Product || model("Product", productSchema);
+export const Product = mongoose.models.Product || model("Product", productSchema);
