@@ -10,6 +10,14 @@ const getCategories = TryCatch(async (req, res) => {
     return res.json(new ApiSuccess(200, "categories fetched successfully", { categories }))
 })
 
+const getCategory = TryCatch(async (req, res) => {
+    const category = await Category.findOne({ name: req.params.name })
+    if (!category) {
+        throw new ApiError(404, "category not found")
+    }
+    return res.json(new ApiSuccess(200, "category fetched successfully", { category }))
+})
+
 const updateCategory = TryCatch(async (req, res) => {
     let { name, slug, description, isActive } = req.body
     const category = await Category.findOne({ name: req.params.name })
@@ -90,4 +98,4 @@ const deleteManyCategories = TryCatch(async (req, res) => {
     }
     return res.json(new ApiSuccess(200, "categories deleted successfully", {}))
 })
-export { createCategory, getCategories, updateCategory, deleteCategory, deleteManyCategories }
+export { createCategory, getCategories, updateCategory, deleteCategory, deleteManyCategories,getCategory }
