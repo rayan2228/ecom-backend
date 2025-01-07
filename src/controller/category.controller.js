@@ -90,7 +90,8 @@ const deleteCategory = TryCatch(async (req, res) => {
 })
 
 const deleteManyCategories = TryCatch(async (req, res) => {
-    const categories = await Category.find()
+    const { selectedCategories } = req.body
+    const categories = await Category.find({ name: { $in: selectedCategories } })
     for (const category of categories) {
         if (category.thumbnail.public_id) {
             await cloudinaryDelete(category.thumbnail.public_id)
