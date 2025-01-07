@@ -10,6 +10,14 @@ const getSubcategories = TryCatch(async (req, res) => {
     return res.json(new ApiSuccess(200, "subcategories fetched successfully", { subcategories }))
 })
 
+const getSubcategory = TryCatch(async (req, res) => {
+    const subcategory = await Subcategory.findOne({ name: req.params.name }).populate("category")
+    if (!subcategory) {
+        throw new ApiError(404, "subcategory not found")
+    }
+    return res.json(new ApiSuccess(200, "subcategory fetched successfully", { subcategory }))
+})
+
 const updateSubcategory = TryCatch(async (req, res) => {
     let { name, slug, description, isActive, category } = req.body
     const subcategory = await Subcategory.findOne({ name: req.params.name })
@@ -74,4 +82,4 @@ const createSubcategory = TryCatch(async (req, res) => {
     return res.status(201).json(new ApiSuccess(201, "subcategory created successfully", { subcategory }))
 })
 
-export { createSubcategory, getSubcategories, updateSubcategory }
+export { createSubcategory, getSubcategories, updateSubcategory,getSubcategory }
