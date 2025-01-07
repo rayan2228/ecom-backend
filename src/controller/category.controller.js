@@ -1,4 +1,5 @@
 import { Category } from "../model/category.schema.js";
+import { Product } from "../model/product.schema .js";
 import { Subcategory } from "../model/subcategory.schema.js";
 import { cloudinaryDelete, cloudinaryUpload } from "../service/cloudinary.js";
 import { ApiError } from "../utils/ApiErrors.js";
@@ -83,6 +84,7 @@ const deleteCategory = TryCatch(async (req, res) => {
         await cloudinaryDelete(category.thumbnail.public_id)
     }
     await Subcategory.updateMany({ category: category._id }, { $pull: { category: category._id } })
+    await Product.updateMany({ category: category._id }, { $pull: { category: category._id } })
     await category.deleteOne()
     return res.json(new ApiSuccess(200, "category deleted successfully", {}))
 })
@@ -94,8 +96,9 @@ const deleteManyCategories = TryCatch(async (req, res) => {
             await cloudinaryDelete(category.thumbnail.public_id)
         }
         await Subcategory.updateMany({ category: category._id }, { $pull: { category: category._id } })
+        await Product.updateMany({ category: category._id }, { $pull: { category: category._id } })
         await category.deleteOne()
     }
     return res.json(new ApiSuccess(200, "categories deleted successfully", {}))
 })
-export { createCategory, getCategories, updateCategory, deleteCategory, deleteManyCategories,getCategory }
+export { createCategory, getCategories, updateCategory, deleteCategory, deleteManyCategories, getCategory }
