@@ -1,4 +1,5 @@
 import { Category } from "../model/category.schema.js";
+import { Subcategory } from "../model/subcategory.schema.js";
 import { cloudinaryDelete, cloudinaryUpload } from "../service/cloudinary.js";
 import { ApiError } from "../utils/ApiErrors.js";
 import { ApiSuccess } from "../utils/ApiSuccess.js";
@@ -65,4 +66,16 @@ const createCategory = TryCatch(async (req, res) => {
     return res.status(201).json(new ApiSuccess(201, "category created successfully", { category }))
 })
 
-export { createCategory, getCategories, updateCategory }
+const deleteCategory = TryCatch(async (req, res) => {
+    const category = await Category.findOne({ name: req.params.name })
+    if (!category) {
+        throw new ApiError(404, "category not found")
+    }
+    if (category.thumbnail.public_id) {
+        await cloudinaryDelete(category.thumbnail.public_id)
+    }
+    await Subcategory.updateMany({ category: category._id }, { $pull: { category: category._id } })
+    await category.deleteOne()
+    return res.json(new ApiSuccess(200, "category deleted successfully", {}))
+})
+export { createCategory, getCategories, updateCategory, deleteCategory }

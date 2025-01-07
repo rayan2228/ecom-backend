@@ -13,4 +13,18 @@ const subcategorySchema = new Schema({
 }, {
     timestamps: true
 });
+
+subcategorySchema.pre("save", async function (next) {
+    try {
+        if (this.isNew) {
+            this.category.push("677d3b973bf4c62d15be82b5");
+        }
+        next();
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+});
+
+
 export const Subcategory = mongoose.models.Subcategory || model("Subcategory", subcategorySchema);
