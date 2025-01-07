@@ -78,4 +78,16 @@ const deleteCategory = TryCatch(async (req, res) => {
     await category.deleteOne()
     return res.json(new ApiSuccess(200, "category deleted successfully", {}))
 })
-export { createCategory, getCategories, updateCategory, deleteCategory }
+
+const deleteManyCategories = TryCatch(async (req, res) => {
+    const categories = await Category.find()
+    for (const category of categories) {
+        if (category.thumbnail.public_id) {
+            await cloudinaryDelete(category.thumbnail.public_id)
+        }
+        await Subcategory.updateMany({ category: category._id }, { $pull: { category: category._id } })
+        await category.deleteOne()
+    }
+    return res.json(new ApiSuccess(200, "categories deleted successfully", {}))
+})
+export { createCategory, getCategories, updateCategory, deleteCategory, deleteManyCategories }
