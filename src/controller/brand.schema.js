@@ -1,6 +1,19 @@
 import { Brand } from "../model/brand.schema"
 import { TryCatch } from "../utils/TryCatch"
 
+const getBrands = TryCatch(async (req, res) => {
+    const brands = await Brand.find()
+    return res.json(new ApiSuccess(200, "brands fetched successfully", { brands }))
+})
+
+const getBrand = TryCatch(async (req, res) => {
+    const brand = await Brand.findOne({ name: req.params.name })
+    if (!brand) {
+        throw new ApiError(404, "brand not found")
+    }
+    return res.json(new ApiSuccess(200, "brand fetched successfully", { brand }))
+})
+
 const createBrand = TryCatch(async (req, res) => {
     const createdData = {}
     let { name, slug, description, isActive } = req.body
@@ -26,4 +39,4 @@ const createBrand = TryCatch(async (req, res) => {
     return res.status(201).json(new ApiSuccess(201, "brand created successfully", { brand }))
 })
 
-export { createBrand }
+export { createBrand, getBrands, getBrand }
