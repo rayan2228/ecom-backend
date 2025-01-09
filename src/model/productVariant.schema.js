@@ -1,4 +1,4 @@
-import { model, models, Schema } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 
 const productVariantSchema = new Schema({
     size: { type: String, required: true, default: null },
@@ -8,4 +8,4 @@ const productVariantSchema = new Schema({
     timestamps: true
 });
 
-export const ProductVariant = models.ProductVariant || model("ProductVariant", productVariantSchema);
+export const ProductVariant = mongoose.models.ProductVariant || model("ProductVariant", productVariantSchema);

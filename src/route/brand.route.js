@@ -1,4 +1,4 @@
-import e from express
+import e from "express"
 import { upload } from "../middleware/multer.middleware.js"
 import { auth } from "../middleware/auth.middleware.js"
 import { createBrand, getBrands, updateBrand, getBrand, deleteBrand, deleteManyBrands } from "../controller/brand.controller.js"

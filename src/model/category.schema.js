@@ -8,7 +8,7 @@ const categorySchema = new Schema({
     thumbnail: {
         publicId: String,
         url: String
-    }
+    },
 }, {
     timestamps: true
 });

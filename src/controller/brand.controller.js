@@ -1,6 +1,9 @@
-import { Brand } from "../model/brand.schema"
-import { cloudinaryDelete, cloudinaryUpload } from "../service/cloudinary"
-import { TryCatch } from "../utils/TryCatch"
+import { Brand } from "../model/brand.schema.js"
+import { Product } from "../model/product.schema .js"
+import { cloudinaryDelete, cloudinaryUpload } from "../service/cloudinary.js"
+import { ApiError } from "../utils/ApiErrors.js"
+import { ApiSuccess } from "../utils/ApiSuccess.js"
+import { TryCatch } from "../utils/TryCatch.js"
 
 const getBrands = TryCatch(async (req, res) => {
     const brands = await Brand.find()
@@ -83,4 +86,17 @@ const deleteBrand = TryCatch(async (req, res) => {
     await brand.deleteOne()
     return res.json(new ApiSuccess(200, "brand deleted successfully", {}))
 })
-export { createBrand, getBrands, getBrand, updateBrand, deleteBrand }
+
+const deleteManyBrands = TryCatch(async (req, res) => {
+    const { selectedBrands } = req.body
+    const brands = await Brand.find({ name: { $in: selectedBrands } })
+    for (const brand of brands) {
+        if (brand.thumbnail.public_id) {
+            await cloudinaryDelete(brand.thumbnail.public_id)
+        }
+        await Product.updateMany({ brand: brand._id }, { $set: { brand: null } })
+        await brand.deleteOne()
+    }
+    return res.json(new ApiSuccess(200, "brands deleted successfully", {}))
+})
+export { createBrand, getBrands, getBrand, updateBrand, deleteBrand, deleteManyBrands }
