@@ -1,5 +1,5 @@
 import { Product } from "../model/product.schema .js";
-import { cloudinaryUpload } from "../service/cloudinary.js";
+import { cloudinaryDelete, cloudinaryUpload } from "../service/cloudinary.js";
 import { ApiError } from "../utils/ApiErrors.js";
 import { ApiSuccess } from "../utils/ApiSuccess.js";
 import { TryCatch } from "../utils/TryCatch.js";
@@ -47,8 +47,52 @@ const createProduct = TryCatch(async (req, res) => {
 })
 
 
-
-
+const updateProduct = TryCatch(async (req, res) => {
+    const product = await Product.findById(req.params.id)
+    if (!product) {
+        throw new ApiError(404, "product not found")
+    }
+    let { title, slug, description, category, subcategory, brand, isActive } = req.body
+    if (!title) {
+        throw new ApiError(400, "title is required")
+    }
+    if (!slug) {
+        slug = title.replaceAll(" ", "-").toLowerCase()
+    }
+    if (!description) {
+        throw new ApiError(400, "description is required")
+    }
+    if (!category) {
+        throw new ApiError(400, "category is required")
+    }
+    if (!subcategory) {
+        throw new ApiError(400, "subcategory is required")
+    }
+    const { thumbnail, images } = req.files
+    if (thumbnail?.length) {
+        const cloudinaryResult = await cloudinaryUpload(thumbnail[0].path, title, "product")
+        product.thumbnail = {
+            public_id: cloudinaryResult.public_id,
+            url: cloudinaryResult.optimizeUrl,
+        }
+    }
+    if (images?.length) {
+        const imagesResult = await Promise.all(images.map(image => cloudinaryUpload(image.path, title, "product")))
+        product.images = imagesResult.map(image => ({
+            publicId: image.public_id,
+            url: image.optimizeUrl,
+        }))
+    }
+    product.title = title
+    product.slug = slug
+    product.description = description
+    product.category = category
+    product.subcategory = subcategory
+    product.brand = brand
+    product.isActive = isActive
+    await product.save()
+    return res.json(new ApiSuccess(200, "product updated successfully", { product }))
+})
 const deleteProduct = TryCatch(async (req, res) => {
     const product = await Product.findByIdAndDelete(req.params.id)
     if (!product) {
@@ -67,4 +111,4 @@ const deleteManyProducts = TryCatch(async (req, res) => {
 })
 
 
-export { createProduct, deleteProduct, deleteManyProducts }
+export { createProduct, deleteProduct, deleteManyProducts, updateProduct }
