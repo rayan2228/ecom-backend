@@ -46,4 +46,25 @@ const createProduct = TryCatch(async (req, res) => {
     return res.status(201).json(new ApiSuccess(201, "product created successfully", { product }))
 })
 
-export { createProduct }
+
+
+
+const deleteProduct = TryCatch(async (req, res) => {
+    const product = await Product.findByIdAndDelete(req.params.id)
+    if (!product) {
+        throw new ApiError(404, "product not found")
+    }
+    return res.json(new ApiSuccess(200, "product deleted successfully", { product }))
+})
+
+const deleteManyProducts = TryCatch(async (req, res) => {
+    const { selectedProducts } = req.body
+    const products = await Product.find({ _id: { $in: selectedProducts } })
+    for (const product of products) {
+        await product.deleteOne()
+    }
+    return res.json(new ApiSuccess(200, "products deleted successfully", {}))
+})
+
+
+export { createProduct, deleteProduct, deleteManyProducts }
