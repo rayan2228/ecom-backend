@@ -1,9 +1,10 @@
-import { ApiError } from "../utils/ApiErrors";
-import { ApiSuccess } from "../utils/ApiSuccess";
-import { TryCatch } from "../utils/TryCatch";
+import { Coupon } from "../model/coupon.schema.js";
+import { ApiError } from "../utils/ApiErrors.js";
+import { ApiSuccess } from "../utils/ApiSuccess.js";
+import { TryCatch } from "../utils/TryCatch.js";
 
 const createCoupon = TryCatch(async (req, res) => {
-    const { code, description, discountType, discountValue, minimum_order_value, maximum_discount, appliesTo, applicableCategories, applicableProducts, applicableUsers, usageLimit, usagePerUser, used_by, startDate, expiryDate, autoApply, isActive } = req.body1
+    const { code, description, discountType, discountValue, minimum_order_value, maximum_discount, appliesTo, applicableCategories, applicableProducts, applicableUsers, usageLimit, usagePerUser, used_by, startDate, expiryDate, autoApply, isActive } = req.body
 
     if (!code) {
         throw new ApiError(400, "code is required")
@@ -45,4 +46,10 @@ const createCoupon = TryCatch(async (req, res) => {
 
 })
 
-export { createCoupon }
+
+const getCoupons = TryCatch(async (req, res) => {
+    const coupons = await Coupon.find()
+    return res.json(new ApiSuccess(200, "coupons fetched successfully", { coupons }))
+})
+
+export { createCoupon,getCoupons }

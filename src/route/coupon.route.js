@@ -4,7 +4,7 @@ import { admin } from "../middleware/admin.middleware.js"
 import { createCoupon } from "../controller/coupon.controller.js"
 const router = e.Router()
 
-router.route("/coupons").post(auth,admin,createCoupon)
+router.route("/coupons").get(getCoupons).post(auth,admin,createCoupon)
 
 
 export default router

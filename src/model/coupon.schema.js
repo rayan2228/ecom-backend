@@ -1,4 +1,5 @@
-import { model, models, Schema } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
+import { TryCatch } from "../utils/TryCatch";
 
 const couponSchema = new Schema({
     code: { type: String, unique: true, required: true },
@@ -32,4 +33,6 @@ const couponSchema = new Schema({
     timestamps: true
 });
 
-export const Coupon = models.Coupon || model("Coupon", couponSchema);
+
+
+export const Coupon = mongoose.models.Coupon || model("Coupon", couponSchema);
