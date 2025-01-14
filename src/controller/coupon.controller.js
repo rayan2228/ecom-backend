@@ -122,4 +122,59 @@ const updateCoupon = TryCatch(async (req, res) => {
     return res.json(new ApiSuccess(200, "coupon updated successfully", { updatedCoupon }))
 })
 
-export { createCoupon, getCoupons, getCoupon, deleteCoupon, deleteSelectedCoupons,updateCoupon }
+
+const applyCoupon = TryCatch(async (req, res) => {
+    const { code, total, order_id } = req.body
+    const coupon = await Coupon.findOne({ code })
+    if (!coupon) {
+        throw new ApiError(404, "coupon not found")
+    }
+    if (Date(coupon.startDate) > Date(new Date())) {
+        throw new ApiError(400, "coupon is not active")
+    }
+    if (Date(coupon.expiryDate) < Date(new Date())) {
+        throw new ApiError(400, "coupon is expired")
+    }
+    if (coupon.usageLimit && coupon.usageLimit <= coupon.used_by.length) {
+        throw new ApiError(400, "coupon usage limit reached")
+    }
+    if (coupon.usagePerUser && coupon.usagePerUser <= coupon.used_by.filter(used_by => used_by.customer_id.equals(req.user._id)).length) {
+        throw new ApiError(400, "coupon usage limit per user reached")
+    }
+    if (coupon.appliesTo === "category") {
+        if (!coupon.applicableCategories.some(category => category.equals(req.body.category))) {
+            throw new ApiError(400, "coupon is not applicable")
+        }
+    }
+    if (coupon.appliesTo === "product") {
+        if (!coupon.applicableProducts.some(product => product.equals(req.body.product))) {
+            throw new ApiError(400, "coupon is not applicable")
+        }
+    }
+    if (coupon.appliesTo === "user") {
+        if (!coupon.applicableUsers.some(user => user.equals(req.user._id))) {
+            throw new ApiError(400, "coupon is not applicable")
+        }
+    }
+    if (coupon.minimum_order_value > total) {
+        throw new ApiError(400, "coupon is not applicable")
+    }
+
+    if (coupon.discountType === "percentage") {
+        const discount = total * coupon.discountValue / 100
+        if (coupon.maximum_discount && discount > coupon.maximum_discount) {
+            throw new ApiError(400, "coupon is not applicable")
+        }
+    }
+    if (!coupon.isActive) {
+        throw new ApiError(400, "coupon is not active")
+    }
+
+    coupon.used_by.push({
+        customer_id: req.user._id,
+        order_id: order_id
+    })
+    await coupon.save()
+    return res.json(new ApiSuccess(200, "coupon applied successfully", { coupon }))
+})
+export { createCoupon, getCoupons, getCoupon, deleteCoupon, deleteSelectedCoupons, updateCoupon, applyCoupon }

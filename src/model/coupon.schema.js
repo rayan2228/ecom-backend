@@ -17,7 +17,7 @@ const couponSchema = new Schema({
     applicableProducts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
     applicableUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     usageLimit: { type: Number, default: null },
-    usagePerUser: { type: Number, default: 1 },
+    usagePerUser: { type: Number, default: null },
     used_by: [
         {
             customer_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
