@@ -60,4 +60,22 @@ const getCoupon = TryCatch(async (req, res) => {
     return res.json(new ApiSuccess(200, "coupon fetched successfully", { coupon }))
 })
 
-export { createCoupon,getCoupons,getCoupon }
+
+const deleteCoupon = TryCatch(async (req, res) => {
+    const coupon = await Coupon.findOneAndDelete({ code: req.params.code })
+    if (!coupon) {
+        throw new ApiError(404, "coupon not found")
+    }
+    return res.json(new ApiSuccess(200, "coupon deleted successfully", { coupon }))
+})
+
+const deleteSelectedCoupons = TryCatch(async (req, res) => {
+    const { selectedCoupons } = req.body
+    const coupons = await Coupon.find({ _id: { $in: selectedCoupons } })
+    for (const coupon of coupons) {
+        await coupon.deleteOne()
+    }
+    return res.json(new ApiSuccess(200, "coupons deleted successfully", {}))
+})
+
+export { createCoupon, getCoupons, getCoupon, deleteCoupon,deleteSelectedCoupons }
