@@ -78,4 +78,48 @@ const deleteSelectedCoupons = TryCatch(async (req, res) => {
     return res.json(new ApiSuccess(200, "coupons deleted successfully", {}))
 })
 
-export { createCoupon, getCoupons, getCoupon, deleteCoupon,deleteSelectedCoupons }
+const updateCoupon = TryCatch(async (req, res) => {
+    const { code, description, discountType, discountValue, minimum_order_value, maximum_discount, appliesTo, applicableCategories, applicableProducts, applicableUsers, usageLimit, usagePerUser, used_by, startDate, expiryDate, autoApply, isActive } = req.body
+    const coupon = await Coupon.findOne({ code: req.params.code })
+    if (!coupon) {
+        throw new ApiError(404, "coupon not found")
+    }
+    if (!code) {
+        throw new ApiError(400, "code is required")
+    }
+    if (!discountType) {
+        throw new ApiError(400, "discountType is required")
+    }
+
+    if (!discountValue) {
+        throw new ApiError(400, "discountValue is required")
+    }
+
+    if (Date(startDate) > Date(expiryDate)) {
+        throw new ApiError(400, "startDate should be less than expiryDate")
+    }
+    const updatedCoupon = new Coupon({
+        code,
+        description,
+        discountType,
+        discountValue,
+        minimum_order_value,
+        maximum_discount,
+        appliesTo,
+        applicableCategories,
+        applicableProducts,
+        applicableUsers,
+        usageLimit,
+        usagePerUser,
+        used_by,
+        startDate,
+        expiryDate,
+        autoApply,
+        isActive
+    })
+
+    await updatedCoupon.save()
+    return res.json(new ApiSuccess(200, "coupon updated successfully", { updatedCoupon }))
+})
+
+export { createCoupon, getCoupons, getCoupon, deleteCoupon, deleteSelectedCoupons,updateCoupon }
