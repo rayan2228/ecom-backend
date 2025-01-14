@@ -6,7 +6,7 @@ const couponSchema = new Schema({
     discountType: { type: String, enum: ["percentage", "fixed"], required: true },
     discountValue: { type: Number, required: true },
     minimum_order_value: { type: Number, default: 0 },
-    maximum_discount: { type: Number, default: null },
+    maximum_discount: { type: Number, default: 0 },
     appliesTo: {
         type: String,
         enum: ["all", "category", "product", "user"],
