@@ -52,4 +52,12 @@ const getCoupons = TryCatch(async (req, res) => {
     return res.json(new ApiSuccess(200, "coupons fetched successfully", { coupons }))
 })
 
-export { createCoupon,getCoupons }
+const getCoupon = TryCatch(async (req, res) => {
+    const coupon = await Coupon.findOne({ code: req.params.code })
+    if (!coupon) {
+        throw new ApiError(404, "coupon not found")
+    }
+    return res.json(new ApiSuccess(200, "coupon fetched successfully", { coupon }))
+})
+
+export { createCoupon,getCoupons,getCoupon }
