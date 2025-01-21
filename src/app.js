@@ -20,12 +20,14 @@ import subCategoryRouter from "./route/subcategory.route.js"
 import brandRouter from "./route/brand.route.js"
 import productRouter from "./route/product.route.js"
 import couponRouter from "./route/coupon.route.js"
+import permissionRouter from "./route/permission.route.js"
 app.use("/api/v1", userRouter)
 app.use("/api/v1", categoryRouter)
 app.use("/api/v1", subCategoryRouter)
 app.use("/api/v1", brandRouter)
 app.use("/api/v1", productRouter)
 app.use("/api/v1", couponRouter)
+app.use("/api/v1", permissionRouter)
 
 
 app.use(errorHandler)
