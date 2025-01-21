@@ -83,7 +83,7 @@ userSchema.methods.accessTokenGenerate = function () {
             _id: this._id,
             email: this.email,
             username: this.username,
-            role: this.role
+            roles: this.role
         }, ACCESSTOKEN_SECRET, { expiresIn: ACCESSTOKEN_EXPIRE })
     } catch (error) {
         console.log(error);
@@ -96,7 +96,7 @@ userSchema.methods.refreshTokenGenerate = function () {
             _id: this._id,
             email: this.email,
             username: this.username,
-            role: this.role
+            roles: this.role
         }, REFRESHTOKEN_SECRET, { expiresIn: REFRESHTOKEN_EXPIRE })
     } catch (error) {
         console.log(error);

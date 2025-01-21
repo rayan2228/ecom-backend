@@ -13,7 +13,7 @@ export const verifyTokenAndGetUser = async (token) => {
         throw new ApiError(401, "Unauthorized access");
     }
 
-    const user = await User.findById(decodedToken._id);
+    const user = await User.findById(decodedToken._id).populate("role");
     if (!user) throw new ApiError(401, "Unauthorized access");
 
     return user;
