@@ -1,6 +1,5 @@
 import e from "express"
 import { auth } from "../middleware/auth.middleware.js"
-import { admin } from "../middleware/admin.middleware.js"
 import { applyCoupon, createCoupon, deleteCoupon, deleteSelectedCoupons, getCoupon, getCoupons, updateCoupon } from "../controller/coupon.controller.js"
 import { checkAccess } from "../middleware/checkAccess.middleware.js"
 const router = e.Router()
