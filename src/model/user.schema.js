@@ -35,11 +35,12 @@ const userSchema = new Schema({
         publicId: String,
         url: String
     },
-    role: {
-        type: String,
-        enum: ["user", "admin", "vendor"],
-        default: "user"
-    },
+    role: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Role"
+        }
+    ],
     // vendor: { types: mongoose.Schema.Types.ObjectId, ref: "Vendor" },
     emailVerified: Date,
     refreshToken: String
