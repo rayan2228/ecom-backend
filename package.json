@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch index.js",
+    "seed": "node ./src/seeder/role.seeder.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
