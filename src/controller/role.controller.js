@@ -1,4 +1,4 @@
-import { Role } from "../model/roleSchema.model.js"
+import { Role } from "../model/role.schema.js"
 import { ApiError } from "../utils/ApiErrors.js"
 import { ApiSuccess } from "../utils/ApiSuccess.js"
 import { TryCatch } from "../utils/TryCatch.js"

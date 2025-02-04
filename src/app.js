@@ -1,6 +1,8 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { origin } from "./constant.js";
 const app = express();
 
@@ -42,15 +44,18 @@ app.use("/api/v1", orderRouter);
 app.use("/api/v1", cartRouter);
 app.use("/api/v1", userDetailsRouter);
 
-app.use(errorHandler);
-
-app.get("/test", (_, res) => {
-  res.json({ message: "hello world" });
+app.get("/", (_, res) => {
+  return res.json({ message: "hello world" });
 });
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 app.all("*", (_, res) => {
-  res.json({ message: "not found" });
+  return res.sendFile(path.join(__dirname,"/views","/errorViews","/404.html"))
 });
+
+app.use(errorHandler);
 
 export { app };
 

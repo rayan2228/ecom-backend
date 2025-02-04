@@ -6,4 +6,4 @@ const getPermissions = async (req, res) => {
     return res.json(new ApiSuccess(200, "permissions fetched successfully", { permissions }));
 }
 
-export { createPermission, getPermissions };
+export { getPermissions };
