@@ -1,5 +1,4 @@
-import { Permission } from "../model/permissionSchema.model.js";
-import { ApiError } from "../utils/ApiErrors.js";
+import { Permission } from "../model/permission.schema.js";
 import { ApiSuccess } from "../utils/ApiSuccess.js";
 
 const getPermissions = async (req, res) => {

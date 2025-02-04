@@ -1,4 +1,4 @@
-import { Permission } from "../model/permissionSchema.model.js";
+import { Permission } from "../model/permission.schema.js";
 const permissions = [
   // 🔹 User Management
   { name: "manage_users", description: "Can manage all users" },

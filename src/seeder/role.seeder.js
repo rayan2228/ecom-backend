@@ -1,5 +1,5 @@
-import { Permission } from "../model/permissionSchema.model.js";
-import { Role } from "../model/roleSchema.model.js";
+import { Permission } from "../model/permission.schema.js";
+import { Role } from "../model/role.schema.js";
 
 export const seedRoles = async () => {
   try {
