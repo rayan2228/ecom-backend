@@ -90,13 +90,14 @@ export const seedRoles = async () => {
       },
     ];
 
-    // Clear existing roles and seed new ones
-    await Role.deleteMany();
+
     await Role.insertMany(roles);
 
     console.log("Roles seeded successfully!");
+    return true
   } catch (error) {
     console.error("Error seeding roles:", error);
+    return false
   }
 };
 

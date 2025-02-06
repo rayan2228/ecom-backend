@@ -1,4 +1,5 @@
 import { Permission } from "../model/permission.schema.js";
+import { Role } from "../model/role.schema.js";
 const permissions = [
   // 🔹 User Management
   { name: "manage_users", description: "Can manage all users" },
@@ -78,16 +79,16 @@ const permissions = [
   },
 ];
 
-
-
 export const seedPermissions = async () => {
   try {
+    await Permission.deleteMany();
+    await Role.deleteMany()
     // Insert permissions
     const createdPermissions = await Permission.insertMany(permissions);
-    console.log("Permissions seeded:", createdPermissions);
-
+    console.log("Permissions seeded");
+    return true
   } catch (error) {
     console.error("Error seeding data:", error);
+    return false
   }
 };
-
