@@ -1,6 +1,6 @@
+import bcrypt from "bcrypt";
 import { Role } from "../model/role.schema.js";
 import { User } from "../model/user.schema.js";
-
 export const seedDemoAccounts = async () => {
   try {
     // Fetch all permissions from the database
@@ -13,28 +13,28 @@ export const seedDemoAccounts = async () => {
         displayname: "admin",
         username: "admin",
         email: "admin@admin.com",
-        password: "admin",
+        password: await bcrypt.hash("admin", 10),
         role: [adminRole._id],
       },
       {
         displayname: "editor",
         username: "editor",
         email: "editor@editor.com",
-        password: "editor",
+        password: await bcrypt.hash("editor", 10),
         role: [editorRole._id],
       },
       {
         displayname: "customer",
         username: "customer",
         email: "customer@customer.com",
-        password: "customer",
+        password: await bcrypt.hash("customer", 10),
         role: [customerRole._id],
       },
       {
         displayname: "vendor",
         username: "vendor",
         email: "vendor@vendor.com",
-        password: "vendor",
+        password: await bcrypt.hash("vendor", 10),
         role: [vendorRole._id],
       },
     ];
