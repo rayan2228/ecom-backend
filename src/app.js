@@ -7,7 +7,7 @@ import { origin } from "./constant.js";
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(
   cors({
@@ -35,7 +35,8 @@ app.use("/api/v1", categoryRouter);
 app.use("/api/v1", subCategoryRouter);
 app.use("/api/v1", brandRouter);
 app.use("/api/v1", productRouter);
-app.use("/api/v1", couponRouter);``
+app.use("/api/v1", couponRouter);
+``;
 app.use("/api/v1", permissionRouter);
 app.use("/api/v1", roleRouter);
 app.use("/api/v1", wishlistRouter);
@@ -48,11 +49,13 @@ app.get("/", (_, res) => {
   return res.json({ message: "hello world" });
 });
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.all("*", (_, res) => {
-  return res.sendFile(path.join(__dirname,"/views","/errorViews","/404.html"))
+  return res.sendFile(
+    path.join(__dirname, "/views", "/errorViews", "/404.html")
+  );
 });
 
 app.use(errorHandler);
