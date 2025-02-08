@@ -1,5 +1,4 @@
-import * as dotenv from 'dotenv'
-dotenv.config()
+
 
 const APP_URL = process.env.APP_URL
 const origin = ["http://localhost:5173"]

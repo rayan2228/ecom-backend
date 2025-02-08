@@ -36,7 +36,6 @@ app.use("/api/v1", subCategoryRouter);
 app.use("/api/v1", brandRouter);
 app.use("/api/v1", productRouter);
 app.use("/api/v1", couponRouter);
-``;
 app.use("/api/v1", permissionRouter);
 app.use("/api/v1", roleRouter);
 app.use("/api/v1", wishlistRouter);
