@@ -24,5 +24,11 @@ const cartSchema = new Schema(
     timestamps: true,
   }
 );
-
+cartSchema.pre("save", function (next) {
+  this.total = this.items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+  next();
+});
 export const Cart = models.Cart || model("Cart", cartSchema);
