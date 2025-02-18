@@ -1,4 +1,4 @@
-import mongoose, { model, models, Schema } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 const cartSchema = new Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -31,4 +31,4 @@ cartSchema.pre("save", function (next) {
   );
   next();
 });
-export const Cart = models.Cart || model("Cart", cartSchema);
+export const Cart = mongoose.models.Cart || model("Cart", cartSchema);

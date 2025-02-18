@@ -1,7 +1,7 @@
-import { Cart } from "../model/cart.schema";
-import { ApiError } from "../utils/ApiErrors";
-import { ApiSuccess } from "../utils/ApiSuccess";
-import { TryCatch } from "../utils/TryCatch";
+import { Cart } from "../model/cart.schema.js";
+import { ApiError } from "../utils/ApiErrors.js";
+import { ApiSuccess } from "../utils/ApiSuccess.js";
+import { TryCatch } from "../utils/TryCatch.js";
 
 const createCart = TryCatch(async (req, res) => {
   const { product } = req.body;
