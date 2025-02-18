@@ -29,6 +29,7 @@ import roleRouter from "./route/role.route.js";
 import subCategoryRouter from "./route/subcategory.route.js";
 import userRouter from "./route/user.route.js";
 import userDetailsRouter from "./route/userDetails.route.js";
+import ProductVariantRouter from "./route/variant.route.js";
 import wishlistRouter from "./route/wishlist.route.js";
 app.use("/api/v1", userRouter);
 app.use("/api/v1", categoryRouter);
@@ -43,6 +44,7 @@ app.use("/api/v1", compareRouter);
 app.use("/api/v1", orderRouter);
 app.use("/api/v1", cartRouter);
 app.use("/api/v1", userDetailsRouter);
+app.use("/api/v1", ProductVariantRouter);
 
 app.get("/", (_, res) => {
   return res.json({ message: "hello world" });
