@@ -4,11 +4,13 @@ import { TryCatch } from "../utils/TryCatch.js";
 export const checkAccess = function (permissions = []) {
   return TryCatch(async (req, res, next) => {
     const user = req.user;
-    const userPermissions = user.roles
-      .map((role) => role.permissions)
-      .flat()
-      .map((permission) => permission.name);
-
+    
+    const userPermissions = user.role
+    .map((role) => role.permissions)
+    .flat()
+    .map((permission) => permission.name);
+    
+    
     const hasPermission = permissions.some((permission) =>
       userPermissions.includes(permission)
     );

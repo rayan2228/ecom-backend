@@ -117,7 +117,12 @@ const login = TryCatch(async (req, res) => {
 
   // Check if the password is correct
   const isPasswordCorrect = await isUser.isPasswordCorrect(password);
-  const user = await User.findById(isUser._id).select("-password");
+  const user = await User.findById(isUser._id).select("-password").populate({
+    path: "role",
+    select: "name",
+  });
+  console.log(user);
+
   if (!isPasswordCorrect) {
     throw new ApiError(401, "Invalid email or password");
   }
@@ -232,7 +237,20 @@ const refreshAccessToken = TryCatch(async (req, res) => {
   res.json(new ApiSuccess(200, "Access token refreshed", { accessToken }));
 });
 
+const getUser = TryCatch(async (req, res) => {
+  const user = await User.findById(req.user._id).select("-password").populate({
+    path: "role",
+    select: "name",
+  });
+  return res.json(new ApiSuccess(200, "User found", { user }));
+});
+
 export {
-    changePassword, createUser, login, logout, mailVerification, refreshAccessToken, updateProfile
+  changePassword,
+  createUser, getUser, login,
+  logout,
+  mailVerification,
+  refreshAccessToken,
+  updateProfile
 };
 

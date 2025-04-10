@@ -1,7 +1,7 @@
 
 
 const APP_URL = process.env.APP_URL
-const origin = ["http://localhost:5173"]
+const origin = "http://localhost:3000"
 const PORT = process.env.PORT
 const DBURL = process.env.DBURL
 const REDIS_URL=process.env.REDIS_URL
