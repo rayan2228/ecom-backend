@@ -209,6 +209,13 @@ const changePassword = TryCatch(async (req, res) => {
   if (!isPasswordCorrect) {
     throw new ApiError(401, "Invalid old password");
   }
+  // mail send for changing password
+  await sendMail(
+    user.email,
+    "Password Changed successfully",
+    "",
+    passwordChangeMail(user.displayname)
+  );
   user.password = password;
   await user.save();
   return res.json(new ApiSuccess(200, "Password updated", {}));
