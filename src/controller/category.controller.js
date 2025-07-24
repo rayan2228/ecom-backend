@@ -24,6 +24,8 @@ const getCategory = TryCatch(async (req, res) => {
 });
 
 const updateCategory = TryCatch(async (req, res) => {
+
+  
   let { name, slug, description, isActive } = req.body;
   const category = await Category.findOne({ name: req.params.name });
   if (!category) {
@@ -35,6 +37,9 @@ const updateCategory = TryCatch(async (req, res) => {
   if (!slug) {
     slug = name.replaceAll(" ", "-").toLowerCase();
   }
+
+  console.log(req.file);
+  
   if (req.file) {
     if (category.thumbnail.public_id) {
       await cloudinaryDelete(category.thumbnail.public_id);
@@ -53,7 +58,7 @@ const updateCategory = TryCatch(async (req, res) => {
   category.name = name;
   category.slug = slug;
   category.description = description;
-  category.isActive = isActive;
+  category.isActive = Boolean(isActive);
   await category.save();
   return res.json(
     new ApiSuccess(200, "category updated successfully", { category })
@@ -62,7 +67,7 @@ const updateCategory = TryCatch(async (req, res) => {
 
 const createCategory = TryCatch(async (req, res) => {
   const createdData = {};
-  console.log(req.body);
+
 
   let { name, slug, description, isActive } = req.body;
   if (!name) {
@@ -140,5 +145,6 @@ export {
   deleteManyCategories,
   getCategories,
   getCategory,
-  updateCategory,
+  updateCategory
 };
+

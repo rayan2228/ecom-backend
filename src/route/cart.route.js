@@ -1,5 +1,6 @@
 import e from "express";
-import { createCart } from "../controller/cart.controller.js";
+import { createCart, getCarts, updateCart } from "../controller/cart.controller.js";
+import { auth } from "../middleware/auth.middleware.js";
 const router = e.Router();
-router.route("/carts").get().post(createCart);
+router.route("/carts").get(auth, getCarts).post(auth, createCart).put(auth, updateCart);
 export default router;
